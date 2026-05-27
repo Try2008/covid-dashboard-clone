@@ -1,47 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+export interface TableColumn {
+  key: string;
+  label: string;
+  align?: 'right' | 'left' | 'center';
+  format?: 'number' | 'percent' | 'text';
+}
+
 @Component({
-  selector: 'app-tables',
+  selector: 'app-table-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tables.html',
-  styleUrls: ['./tables.scss']
+  styleUrls: ['./tables.scss'],
 })
-export class TablesComponent {
-  // נתוני הדגמה לטבלת חיסונים
-  vaccineData = [
-    { city: 'ירושלים', firstDose: 70, secondDose: 65, thirdDose: 40 },
-    { city: 'תל אביב-יפו', firstDose: 85, secondDose: 82, thirdDose: 60 },
-    { city: 'חיפה', firstDose: 80, secondDose: 78, thirdDose: 55 }
-  ];
+export class TableCardComponent {
+  @Input({ required: true }) title = '';
+  @Input() subtitle = '';
+  @Input({ required: true }) columns: TableColumn[] = [];
+  @Input({ required: true }) rows: Record<string, string | number>[] = [];
 
-  // נתוני הדגמה לטבלת רמזור
-  trafficLightData = [
-    { city: 'אילת', score: 4.2, color: 'צהוב' },
-    { city: 'בני ברק', score: 6.8, color: 'כתום' },
-    { city: 'הרצליה', score: 3.1, color: 'ירוק' }
-  ];
+  sortKey = '';
+  sortAsc = true;
 
-  sortColumn = '';
-  sortAscending = true;
-
-  // פונקציית מיון גנרית
-  sortTable(dataArray: any[], column: string) {
-    if (this.sortColumn === column) {
-      this.sortAscending = !this.sortAscending;
+  sortBy(key: string): void {
+    if (this.sortKey === key) {
+      this.sortAsc = !this.sortAsc;
     } else {
-      this.sortColumn = column;
-      this.sortAscending = true;
+      this.sortKey = key;
+      this.sortAsc = true;
     }
-
-    dataArray.sort((a, b) => {
-      const valA = a[column];
-      const valB = b[column];
-
-      if (valA < valB) return this.sortAscending ? -1 : 1;
-      if (valA > valB) return this.sortAscending ? 1 : -1;
-      return 0;
+    const dir = this.sortAsc ? 1 : -1;
+    this.rows = [...this.rows].sort((a, b) => {
+      const av = a[key];
+      const bv = b[key];
+      if (av === bv) return 0;
+      return av > bv ? dir : -dir;
     });
   }
 }

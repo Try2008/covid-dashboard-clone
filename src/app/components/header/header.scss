@@ -1,24 +1,89 @@
-.app-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+:host { display: block; }
 
-    .right-side {
-        display: flex;
-        align-items: center;
-        gap: 15px;
+.header-wrapper {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 64px;
+  background: #fff;
+  box-shadow: var(--header-shadow);
+  z-index: 999999999;
+}
 
-        .logo {
-            height: 40px;
-        }
+.header-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  padding: 0 16px;
+  gap: 12px;
+}
 
-        h1 {
-            font-size: 1.2rem;
-            margin: 0;
-            color: #2b3345;
-        }
+.logo-container {
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .hamburger {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    padding: 8px;
+    border-radius: 6px;
+
+    &:hover { background: #f1f4f9; }
+
+    span {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: var(--primary-dark);
+      border-radius: 2px;
     }
+  }
+
+  .logo { display: inline-flex; align-items: center; }
+}
+
+.title-container {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: right;
+}
+
+.left-container { flex: 0 1 auto; }
+
+.icons-container {
+  flex: 0 1 auto;
+  width: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--primary-dark);
+    border-radius: 50%;
+
+    &:hover { background: #f1f4f9; }
+  }
+}
+
+@media (max-width: 600px) {
+  .title-container { font-size: 20px; }
+  .header-container { padding: 0 10px; gap: 8px; }
 }

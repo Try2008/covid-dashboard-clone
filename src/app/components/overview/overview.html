@@ -1,9 +1,20 @@
-<section class="overview-container">
-    <div class="overview-grid">
-        <div class="overview-card" *ngFor="let card of cards">
-            <h3 class="card-title">{{ card.title }}</h3>
-            <div class="card-value">{{ card.value }}</div>
-            <p class="card-subtext">{{ card.subtext }}</p>
-        </div>
-    </div>
-</section>
+<div class="kpi-card" [attr.data-accent]="accent">
+  <div class="kpi-accent"></div>
+  <div class="kpi-body">
+    <h3 class="kpi-title">{{ title }}</h3>
+    <div class="kpi-value">{{ value }}</div>
+    @if (subtitle) {
+      <p class="kpi-subtitle">{{ subtitle }}</p>
+    }
+    @if (trend) {
+      <p class="kpi-trend" [class.up]="trend === 'up'" [class.down]="trend === 'down'">
+        <span class="arrow" aria-hidden="true">
+          @if (trend === 'up') { ▲ }
+          @else if (trend === 'down') { ▼ }
+          @else { ● }
+        </span>
+        <span class="trend-text">{{ trendText }}</span>
+      </p>
+    }
+  </div>
+</div>

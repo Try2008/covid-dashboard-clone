@@ -1,9 +1,23 @@
-<nav class="app-navbar">
-    <ul>
-        <li class="active"><a href="#">מבט על</a></li>
-        <li><a href="#">מדדים מרכזיים</a></li>
-        <li><a href="#">עקומת המגפה</a></li>
-        <li><a href="#">תחלואה מיישובים</a></li>
-        <li><a href="#">חיסונים</a></li>
-    </ul>
+<nav>
+  <button type="button" class="arrow arrow-right" aria-label="גלול ימינה" (click)="scroll(1)">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5l8 7-8 7z"/></svg>
+  </button>
+
+  <ul class="anchor-list" #list>
+    @for (item of items; track item.id; let i = $index) {
+      <li
+        class="anchor-list-item"
+        [class.selected]="i === selectedIndex()"
+        (click)="select(i)"
+      >
+        <a class="item-link-anchor" [href]="'#' + item.id">
+          <label class="item-link-anchor-label">{{ item.label }}</label>
+        </a>
+      </li>
+    }
+  </ul>
+
+  <button type="button" class="arrow arrow-left" aria-label="גלול שמאלה" (click)="scroll(-1)">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 5l-8 7 8 7z"/></svg>
+  </button>
 </nav>

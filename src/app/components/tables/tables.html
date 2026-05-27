@@ -1,52 +1,47 @@
-<section class="tables-container">
-    <div class="table-card">
-        <h2>💉 מתחסנים לפי יישוב</h2>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th (click)="sortTable(vaccineData, 'city')">יישוב ↕️</th>
-                        <th (click)="sortTable(vaccineData, 'firstDose')">מנה ראשונה (%) ↕️</th>
-                        <th (click)="sortTable(vaccineData, 'secondDose')">מנה שנייה (%) ↕️</th>
-                        <th (click)="sortTable(vaccineData, 'thirdDose')">מנה שלישית (%) ↕️</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let row of vaccineData">
-                        <td>{{ row.city }}</td>
-                        <td>{{ row.firstDose }}</td>
-                        <td>{{ row.secondDose }}</td>
-                        <td>{{ row.thirdDose }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="table-card">
+  <div class="table-head">
+    <h3 class="table-title">{{ title }}</h3>
+    @if (subtitle) {
+      <p class="table-subtitle">{{ subtitle }}</p>
+    }
+  </div>
 
-    <div class="table-card mt-4">
-        <h2>🚦 מודל הרמזור - צבעי יישובים</h2>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th (click)="sortTable(trafficLightData, 'city')">יישוב ↕️</th>
-                        <th (click)="sortTable(trafficLightData, 'score')">ציון ↕️</th>
-                        <th (click)="sortTable(trafficLightData, 'color')">צבע ↕️</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let row of trafficLightData" [ngClass]="{
-                'bg-green': row.color === 'ירוק',
-                'bg-yellow': row.color === 'צהוב',
-                'bg-orange': row.color === 'כתום',
-                'bg-red': row.color === 'אדום'
-              }">
-                        <td>{{ row.city }}</td>
-                        <td>{{ row.score }}</td>
-                        <td><strong>{{ row.color }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          @for (col of columns; track col.key) {
+            <th
+              [class.center]="col.align === 'center'"
+              [class.left]="col.align === 'left'"
+              (click)="sortBy(col.key)"
+            >
+              {{ col.label }}
+              @if (sortKey === col.key) {
+                <span class="sort-ind">{{ sortAsc ? '▲' : '▼' }}</span>
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows; track $index) {
+          <tr>
+            @for (col of columns; track col.key) {
+              <td
+                [class.center]="col.align === 'center'"
+                [class.left]="col.align === 'left'"
+              >
+                @if (col.format === 'percent') {
+                  {{ row[col.key] }}%
+                } @else {
+                  {{ row[col.key] }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

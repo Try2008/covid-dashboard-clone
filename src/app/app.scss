@@ -1,7 +1,145 @@
-.main-content {
-  max-width: 1200px;
+.main {
+  padding-top: 127px;
+  min-height: 100vh;
+  background: var(--body-bg);
+}
+
+.page {
+  max-width: 1240px;
   margin: 0 auto;
-  /* המרכוז הקסום */
-  padding: 20px 15px;
-  /* מעט ריווח פנימי כדי שבמסכים קטנים התוכן לא יידבק לקצוות המסך */
+  padding: 24px 20px 80px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  a {
+    color: var(--muted);
+    &:hover { color: var(--primary-dark); text-decoration: underline; }
+  }
+  .sep { color: var(--muted); }
+  .current { color: var(--primary-dark); font-weight: 600; }
+}
+
+.page-title {
+  margin: 0 0 28px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+/* ── Section block ── */
+.section {
+  margin-bottom: 36px;
+  scroll-margin-top: 140px;
+
+  .section-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .section-title { display: flex; align-items: center; }
+
+  .section-header {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+
+  .links-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    box-shadow: var(--slim-shadow);
+    transition: background 0.15s;
+
+    &:hover { background: #fff; }
+  }
+}
+
+/* ── Card lists (ul.cards > li > ul) ── */
+.cards { padding: 0; margin: 0; }
+.cards > li { display: block; }
+
+.cards-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+.card-cell {
+  display: block;
+  list-style: none;
+}
+
+/* KPI grid: auto-fit cards ~280px each */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+
+  .card-cell.kpi { min-width: 0; }
+}
+
+/* Chart grid: one wide card + one regular, or two equal */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  .card-cell.chart       { min-width: 0; }
+  .card-cell.chart.wide  { grid-column: 1 / -1; }
+}
+
+/* Mixed grid: small KPIs in a row, chart spans full width below */
+.mixed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+
+  .card-cell.kpi.small  { min-width: 0; }
+  .card-cell.chart.full { grid-column: 1 / -1; }
+}
+
+/* Single full-width cell */
+.cards-row > .card-cell.chart.full { width: 100%; }
+
+/* ── Responsive: ~464px viewport, single column ── */
+@media (max-width: 700px) {
+  .chart-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 464px) {
+  .main { padding-top: 127px; }
+  .page { padding: 18px 12px 60px; }
+  .page-title { font-size: 22px; margin-bottom: 20px; }
+
+  .section .section-header { font-size: 18px; }
+  .section .links-btn { padding: 5px 10px; font-size: 12px; }
+
+  .kpi-grid,
+  .chart-grid,
+  .mixed-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .cards-row { gap: 12px; }
 }

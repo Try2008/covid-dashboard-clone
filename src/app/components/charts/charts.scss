@@ -1,33 +1,33 @@
-.charts-container {
-    padding: 20px;
-    background-color: #f4f6f9;
+:host { display: block; height: 100%; }
 
-    .charts-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-    }
+.chart-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 18px 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-    .chart-card {
-        background-color: #ffffff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.chart-head {
+  margin-bottom: 8px;
+}
 
-        /* מתיחת הגרף הראשון (המרכזי) על פני כל השורה */
-        &:first-child {
-            grid-column: 1 / -1;
-        }
+.chart-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
 
-        /* עיצוב כרטיסיות ה-Placeholder */
-        &.placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 390px;
-            background-color: #f8f9fa;
-            border: 2px dashed #ced4da;
-            color: #6c757d;
-        }
-    }
+.chart-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chart-body {
+  flex: 1 1 auto;
+  min-height: 0;
 }

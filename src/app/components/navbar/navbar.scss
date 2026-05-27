@@ -1,38 +1,81 @@
-.app-navbar {
-    background-color: #ffffff;
-    border-bottom: 2px solid #e0e0e0;
-    /* מאפשר גלילה חלקה במסכים קטנים אם חסר מקום, למרות שזה לא חובה לפי ההנחיות */
-    overflow-x: auto;
+:host {
+  display: block;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  height: 63px;
+  z-index: 99999999;
+}
 
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 15px;
+nav {
+  background: var(--nav-bg);
+  height: 64px;
+  direction: rtl;
+  display: flex;
+  align-items: stretch;
+  box-shadow: var(--nav-shadow);
+  position: relative;
+}
 
-        li {
-            padding: 15px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            color: #555555;
-            border-bottom: 3px solid transparent;
-            white-space: nowrap; // מונע שבירת שורות בתוך הכפתור
+.arrow {
+  flex: 0 0 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--nav-bg);
+  color: #fff;
+  z-index: 2;
 
-            &:hover {
-                color: #2b3345;
-                background-color: #f8f9fa;
-            }
+  &:hover { background: rgba(255, 255, 255, 0.08); }
+}
 
-            &.active {
-                color: #1a73e8;
-                border-bottom-color: #1a73e8;
-            }
+.anchor-list {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  flex: 1 1 auto;
+  scrollbar-width: none;
 
-            a {
-                text-decoration: none;
-                color: inherit;
-            }
-        }
+  &::-webkit-scrollbar { display: none; }
+}
+
+.anchor-list-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.06); }
+
+  &.selected {
+    background: #fff;
+
+    .item-link-anchor-label {
+      color: #233333;
     }
+  }
+}
+
+.item-link-anchor {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  height: 100%;
+}
+
+.item-link-anchor-label {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .item-link-anchor { padding: 0 12px; }
+  .arrow { flex-basis: 28px; width: 28px; }
 }

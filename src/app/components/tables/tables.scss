@@ -1,53 +1,68 @@
-.tables-container {
-    padding: 20px;
-    background-color: #f4f6f9;
+:host { display: block; height: 100%; }
 
-    .table-card {
-        background-color: #ffffff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
+.table-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 18px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-        h2 {
-            margin-top: 0;
-            color: #2b3345;
-            font-size: 1.2rem;
-        }
+.table-head { margin-bottom: 10px; }
 
-        /* מאפשר גלילה אופקית של הטבלה במסכים קטנים כדי לא לשבור את העיצוב */
-        .table-responsive {
-            overflow-x: auto;
-        }
+.table-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+.table-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
 
-            th,
-            td {
-                padding: 12px 15px;
-                text-align: right;
-                border-bottom: 1px solid #e0e0e0;
-            }
+.table-wrap {
+  overflow-x: auto;
+  flex: 1 1 auto;
+  max-height: 360px;
+  overflow-y: auto;
+}
 
-            th {
-                background-color: #f8f9fa;
-                color: #555555;
-                cursor: pointer;
-                user-select: none;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
 
-                &:hover {
-                    background-color: #e9ecef;
-                }
-            }
-        }
-    }
+  th, td {
+    padding: 10px 8px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
 
-    .bg-green { background-color: rgba(40, 167, 69, 0.15); }
-    .bg-yellow { background-color: rgba(255, 193, 7, 0.15); }
-    .bg-orange { background-color: rgba(253, 126, 20, 0.15); }
-    .bg-red { background-color: rgba(220, 53, 69, 0.15); }
+    &.center { text-align: center; }
+    &.left   { text-align: left; }
+  }
 
-    .mt-4 { margin-top: 30px; }
+  th {
+    color: #6b7891;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    background: #f6f8fb;
+    position: sticky;
+    top: 0;
+  }
+
+  tbody tr:hover { background: #fafbfd; }
+
+  .sort-ind {
+    margin-inline-start: 4px;
+    font-size: 10px;
+    color: var(--primary-dark);
+  }
 }

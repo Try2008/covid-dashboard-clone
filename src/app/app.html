@@ -1,8 +1,259 @@
 <app-header></app-header>
-<app-navbar></app-navbar>
+<app-alternative-anchor-bar></app-alternative-anchor-bar>
 
-<main class="main-content">
-  <app-overview></app-overview>
-  <app-charts></app-charts>
-  <app-tables></app-tables>
+<main class="main">
+  <div class="page">
+
+    <nav class="breadcrumb" aria-label="פירורי לחם">
+      <a href="#">עולם הדאטה</a>
+      <span class="sep">&laquo;</span>
+      <span class="current">קורונה</span>
+    </nav>
+
+    <h1 class="page-title">קורונה</h1>
+
+    <!-- ============== 1. תמונת מצב ============== -->
+    <section class="section" id="section-overview">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">תמונת מצב</h2></div>
+        <button type="button" class="links-btn">לינקים בנושא</button>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row kpi-grid">
+            @for (k of overviewKpis; track k.title) {
+              <li class="card-cell kpi">
+                <app-kpi-card
+                  [title]="k.title"
+                  [value]="k.value"
+                  [subtitle]="k.subtitle"
+                  [trend]="k.trend ?? null"
+                  [trendText]="k.trendText ?? ''"
+                  [accent]="k.accent"
+                ></app-kpi-card>
+              </li>
+            }
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 2. תחלואה ============== -->
+    <section class="section" id="section-cases">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">תחלואה</h2></div>
+        <button type="button" class="links-btn">לינקים בנושא</button>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row chart-grid">
+            <li class="card-cell chart wide">
+              <app-chart-card
+                title="עקומת מאומתים יומית"
+                subtitle="14 ימים אחרונים"
+                [options]="casesCurveOptions"
+              ></app-chart-card>
+            </li>
+            <li class="card-cell chart">
+              <app-chart-card
+                title="פילוח מאומתים לפי גיל"
+                subtitle="היום האחרון"
+                [options]="casesByAgeOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 3. בדיקות ============== -->
+    <section class="section" id="section-tests">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">בדיקות</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row chart-grid">
+            <li class="card-cell chart">
+              <app-chart-card
+                title="בדיקות יומיות לפי סוג"
+                [options]="testsOptions"
+              ></app-chart-card>
+            </li>
+            <li class="card-cell chart">
+              <app-chart-card
+                title="אחוז בדיקות חיוביות"
+                [options]="testsPositiveOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 4. אשפוז ============== -->
+    <section class="section" id="section-hospitalization">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">אשפוז</h2></div>
+        <button type="button" class="links-btn">לינקים בנושא</button>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row mixed-grid">
+            @for (k of hospitalKpis; track k.title) {
+              <li class="card-cell kpi small">
+                <app-kpi-card
+                  [title]="k.title"
+                  [value]="k.value"
+                  [subtitle]="k.subtitle"
+                  [accent]="k.accent"
+                ></app-kpi-card>
+              </li>
+            }
+            <li class="card-cell chart full">
+              <app-chart-card
+                title="מאושפזים וחולים קשה לאורך זמן"
+                [options]="hospitalTrendOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 5. תמותה ============== -->
+    <section class="section" id="section-mortality">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">תמותה</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row mixed-grid">
+            @for (k of mortalityKpis; track k.title) {
+              <li class="card-cell kpi small">
+                <app-kpi-card
+                  [title]="k.title"
+                  [value]="k.value"
+                  [subtitle]="k.subtitle"
+                  [trend]="k.trend ?? null"
+                  [trendText]="k.trendText ?? ''"
+                  [accent]="k.accent"
+                ></app-kpi-card>
+              </li>
+            }
+            <li class="card-cell chart full">
+              <app-chart-card
+                title="נפטרים שבועי"
+                [options]="mortalityOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 6. חיסונים ============== -->
+    <section class="section" id="section-vaccinations">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">חיסונים</h2></div>
+        <button type="button" class="links-btn">לינקים בנושא</button>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row kpi-grid">
+            @for (k of vaxKpis; track k.title) {
+              <li class="card-cell kpi">
+                <app-kpi-card
+                  [title]="k.title"
+                  [value]="k.value"
+                  [subtitle]="k.subtitle"
+                  [accent]="k.accent"
+                ></app-kpi-card>
+              </li>
+            }
+            <li class="card-cell chart full">
+              <app-chart-card
+                title="שיעור מתחסנים לפי קבוצת גיל"
+                subtitle="% מתוך האוכלוסייה בקבוצה"
+                [options]="vaxByAgeOptions"
+                [height]="380"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 7. רמזור יישובי ============== -->
+    <section class="section" id="section-traffic-light">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">רמזור יישובי</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row">
+            <li class="card-cell chart full">
+              <app-table-card
+                title="ציוני רמזור לפי יישוב"
+                subtitle="ניתן ללחוץ על כותרת לטור למיון"
+                [columns]="trafficColumns"
+                [rows]="trafficRows"
+              ></app-table-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 8. וריאנטים ============== -->
+    <section class="section" id="section-variants">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">וריאנטים</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row">
+            <li class="card-cell chart full">
+              <app-chart-card
+                title="תפוצת וריאנטים"
+                subtitle="מתוך דגימות שרוצפו בשבועיים האחרונים"
+                [options]="variantsOptions"
+                [height]="360"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== 9. בידוד ============== -->
+    <section class="section" id="section-isolation">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">בידוד</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="cards-row mixed-grid">
+            @for (k of isolationKpis; track k.title) {
+              <li class="card-cell kpi small">
+                <app-kpi-card
+                  [title]="k.title"
+                  [value]="k.value"
+                  [subtitle]="k.subtitle"
+                  [accent]="k.accent"
+                ></app-kpi-card>
+              </li>
+            }
+            <li class="card-cell chart full">
+              <app-chart-card
+                title="יציאות מבידוד לפי משך"
+                [options]="isolationDurationOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+  </div>
 </main>

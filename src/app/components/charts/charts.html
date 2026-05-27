@@ -1,19 +1,16 @@
-<section class="charts-container">
-    <div class="charts-grid">
+<div class="chart-card">
+  <div class="chart-head">
+    <h3 class="chart-title">{{ title }}</h3>
+    @if (subtitle) {
+      <p class="chart-subtitle">{{ subtitle }}</p>
+    }
+  </div>
 
-        <div class="chart-card">
-            <highcharts-chart [options]="chartOneOptions"
-                style="width: 100%; height: 350px; display: block;">
-            </highcharts-chart>
-        </div>
-
-        <div class="chart-card placeholder">
-            <h3>Chart Placeholder</h3>
-        </div>
-
-        <div class="chart-card placeholder">
-            <h3>Chart Placeholder</h3>
-        </div>
-
-    </div>
-</section>
+  <div class="chart-body">
+    <highcharts-chart
+      [options]="options"
+      [style.height.px]="height"
+      style="width: 100%; display: block;"
+    ></highcharts-chart>
+  </div>
+</div>
