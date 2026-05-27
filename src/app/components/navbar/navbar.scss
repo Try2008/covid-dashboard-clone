@@ -1,0 +1,38 @@
+.app-navbar {
+    background-color: #ffffff;
+    border-bottom: 2px solid #e0e0e0;
+    /* מאפשר גלילה חלקה במסכים קטנים אם חסר מקום, למרות שזה לא חובה לפי ההנחיות */
+    overflow-x: auto;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 15px;
+
+        li {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #555555;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap; // מונע שבירת שורות בתוך הכפתור
+
+            &:hover {
+                color: #2b3345;
+                background-color: #f8f9fa;
+            }
+
+            &.active {
+                color: #1a73e8;
+                border-bottom-color: #1a73e8;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    }
+}

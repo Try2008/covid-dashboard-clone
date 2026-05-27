@@ -1,0 +1,33 @@
+.charts-container {
+    padding: 20px;
+    background-color: #f4f6f9;
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .chart-card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        /* מתיחת הגרף הראשון (המרכזי) על פני כל השורה */
+        &:first-child {
+            grid-column: 1 / -1;
+        }
+
+        /* עיצוב כרטיסיות ה-Placeholder */
+        &.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 390px;
+            background-color: #f8f9fa;
+            border: 2px dashed #ced4da;
+            color: #6c757d;
+        }
+    }
+}

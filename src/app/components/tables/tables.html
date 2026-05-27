@@ -1,0 +1,52 @@
+<section class="tables-container">
+    <div class="table-card">
+        <h2>💉 מתחסנים לפי יישוב</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th (click)="sortTable(vaccineData, 'city')">יישוב ↕️</th>
+                        <th (click)="sortTable(vaccineData, 'firstDose')">מנה ראשונה (%) ↕️</th>
+                        <th (click)="sortTable(vaccineData, 'secondDose')">מנה שנייה (%) ↕️</th>
+                        <th (click)="sortTable(vaccineData, 'thirdDose')">מנה שלישית (%) ↕️</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of vaccineData">
+                        <td>{{ row.city }}</td>
+                        <td>{{ row.firstDose }}</td>
+                        <td>{{ row.secondDose }}</td>
+                        <td>{{ row.thirdDose }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-card mt-4">
+        <h2>🚦 מודל הרמזור - צבעי יישובים</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th (click)="sortTable(trafficLightData, 'city')">יישוב ↕️</th>
+                        <th (click)="sortTable(trafficLightData, 'score')">ציון ↕️</th>
+                        <th (click)="sortTable(trafficLightData, 'color')">צבע ↕️</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let row of trafficLightData" [ngClass]="{
+                'bg-green': row.color === 'ירוק',
+                'bg-yellow': row.color === 'צהוב',
+                'bg-orange': row.color === 'כתום',
+                'bg-red': row.color === 'אדום'
+              }">
+                        <td>{{ row.city }}</td>
+                        <td>{{ row.score }}</td>
+                        <td><strong>{{ row.color }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

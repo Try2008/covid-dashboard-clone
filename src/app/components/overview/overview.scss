@@ -1,0 +1,38 @@
+.overview-container {
+    padding: 20px;
+    background-color: #f4f6f9;
+
+    .overview-grid {
+        display: grid;
+        // שורת המחץ - יוצרת רשת אוטומטית שמתאימה לכל מסך החל מ-250 פיקסלים ומעלה
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .overview-card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-right: 5px solid #1a73e8; // פס כחול בצד ימין לעיצוב מקצועי
+
+        .card-title {
+            font-size: 0.9rem;
+            color: #666666;
+            margin: 0 0 10px 0;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2b3345;
+            margin-bottom: 5px;
+        }
+
+        .card-subtext {
+            font-size: 0.8rem;
+            color: #999999;
+            margin: 0;
+        }
+    }
+}

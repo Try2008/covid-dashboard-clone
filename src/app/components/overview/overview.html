@@ -1,0 +1,9 @@
+<section class="overview-container">
+    <div class="overview-grid">
+        <div class="overview-card" *ngFor="let card of cards">
+            <h3 class="card-title">{{ card.title }}</h3>
+            <div class="card-value">{{ card.value }}</div>
+            <p class="card-subtext">{{ card.subtext }}</p>
+        </div>
+    </div>
+</section>
