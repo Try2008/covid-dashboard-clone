@@ -1,64 +1,87 @@
-:host { display: block; height: 100%; }
+:host { display: inline-flex; }
 
-.kpi-card {
-  background: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: var(--card-shadow);
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  min-height: 120px;
-  height: 100%;
-  overflow: hidden;
-}
-
-.kpi-accent {
-  flex: 0 0 6px;
-  background: var(--color-blue);
-}
-
-[data-accent="orange"] .kpi-accent { background: var(--color-orange); }
-[data-accent="green"]  .kpi-accent { background: var(--color-green); }
-[data-accent="teal"]   .kpi-accent { background: var(--color-teal); }
-[data-accent="purple"] .kpi-accent { background: var(--color-purple); }
-
-.kpi-body {
-  flex: 1 1 auto;
-  padding: 14px 18px;
+.card.kpi-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 3px 3px 11px 0 rgba(70, 90, 122, 0.11);
+  padding: 11px;
+  width: 165px;
+  min-height: 184px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 4px;
 }
 
-.kpi-title {
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 27px;
+  margin-bottom: 8px;
+  gap: 6px;
+}
+
+.title.no-padding { padding: 0; }
+
+h3.title-header {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  color: #6b7891;
-}
-
-.kpi-value {
-  font-size: 30px;
-  font-weight: 700;
   color: var(--primary-dark);
   line-height: 1.15;
 }
 
-.kpi-subtitle {
-  margin: 0;
-  font-size: 12px;
-  color: var(--muted);
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--primary-dark);
+  cursor: pointer;
+  user-select: none;
 }
 
-.kpi-trend {
-  margin: 4px 0 0;
-  font-size: 12px;
+.body {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
-  gap: 6px;
-  color: var(--muted);
+}
 
-  &.up   { color: var(--color-orange); }
-  &.down { color: var(--color-green); }
+.kpi-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.kpi-lines .line {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+h4.bold.data-number {
+  margin: 0;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.1;
+}
+
+h4.bold.data-number.main {
+  font-size: 22.4px;
+}
+
+h4.bold.data-number.small {
+  font-size: 12px;
+}
+
+.kpi-lines .label {
+  font-size: 12px;
+  color: var(--primary-dark);
 }

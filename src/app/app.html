@@ -1,36 +1,51 @@
 <app-header></app-header>
 <app-alternative-anchor-bar></app-alternative-anchor-bar>
+<app-side-menu></app-side-menu>
 
 <main class="main">
   <div class="page">
 
     <nav class="breadcrumb" aria-label="פירורי לחם">
-      <a href="#">עולם הדאטה</a>
-      <span class="sep">&laquo;</span>
+      <a href="/">עולם הדאטה</a>
+      <span class="sep"> &gt; </span>
       <span class="current">קורונה</span>
     </nav>
 
     <h1 class="page-title">קורונה</h1>
 
-    <!-- ============== 1. תמונת מצב ============== -->
+    <!-- 1. מבט על -->
     <section class="section" id="section-overview">
       <div class="section-info">
-        <div class="section-title"><h2 class="section-header">תמונת מצב</h2></div>
-        <button type="button" class="links-btn">לינקים בנושא</button>
+        <div class="section-title"><h2 class="section-header">מבט על</h2></div>
       </div>
+
       <ul class="cards">
         <li>
-          <ul class="cards-row kpi-grid">
+          <ul class="row-cards">
             @for (k of overviewKpis; track k.title) {
-              <li class="card-cell kpi">
+              <li class="row-item">
                 <app-kpi-card
                   [title]="k.title"
-                  [value]="k.value"
-                  [subtitle]="k.subtitle"
-                  [trend]="k.trend ?? null"
-                  [trendText]="k.trendText ?? ''"
-                  [accent]="k.accent"
+                  [mainValue]="k.mainValue"
+                  [subRows]="k.subRows"
                 ></app-kpi-card>
+              </li>
+            }
+          </ul>
+        </li>
+
+        <li class="solid">
+          <h3 class="wrapper-header">סיכום 7 ימים אחרונים</h3>
+          <ul class="row-cards">
+            @for (s of weekSummary; track s.title) {
+              <li class="row-item">
+                <app-kpi-slim-card
+                  [title]="s.title"
+                  [value]="s.value"
+                  [change]="s.change"
+                  [subtitle]="s.subtitle"
+                  [extra]="s.extra"
+                ></app-kpi-slim-card>
               </li>
             }
           </ul>
@@ -38,27 +53,28 @@
       </ul>
     </section>
 
-    <!-- ============== 2. תחלואה ============== -->
-    <section class="section" id="section-cases">
+    <!-- 2. מדדים מרכזיים -->
+    <section class="section" id="section-main-indicators">
       <div class="section-info">
-        <div class="section-title"><h2 class="section-header">תחלואה</h2></div>
+        <div class="section-title"><h2 class="section-header">מדדים מרכזיים</h2></div>
         <button type="button" class="links-btn">לינקים בנושא</button>
       </div>
       <ul class="cards">
         <li>
-          <ul class="cards-row chart-grid">
-            <li class="card-cell chart wide">
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
               <app-chart-card
-                title="עקומת מאומתים יומית"
-                subtitle="14 ימים אחרונים"
-                [options]="casesCurveOptions"
+                title="ממוצע מאומתים שבועי"
+                [options]="weeklyCasesAvgOptions"
+                [height]="280"
               ></app-chart-card>
             </li>
-            <li class="card-cell chart">
+            <li class="row-item chart">
               <app-chart-card
-                title="פילוח מאומתים לפי גיל"
-                subtitle="היום האחרון"
-                [options]="casesByAgeOptions"
+                title="מאומתים חדשים יומי"
+                filterLabel="חודש אחרון"
+                [legendItems]="newCasesLegend"
+                [options]="newCasesDailyOptions"
               ></app-chart-card>
             </li>
           </ul>
@@ -66,54 +82,110 @@
       </ul>
     </section>
 
-    <!-- ============== 3. בדיקות ============== -->
+    <!-- 3. תחלואה ואשפוזי ילדים -->
+    <section class="section" id="section-children">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">תחלואה ואשפוזי ילדים</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="row-cards">
+            <li class="row-item chart full">
+              <app-chart-card
+                title="מגמת ילדים מאומתים – ממוצע נע 7 ימים"
+                filterLabel="חודש אחרון"
+                [legendItems]="childrenLegend"
+                [options]="childrenTrendOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. השפעת התחסנות על התחלואה -->
+    <section class="section" id="section-vaccination-effect">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">השפעת התחסנות על התחלואה</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="row-cards">
+            <li class="row-item chart full">
+              <app-chart-card
+                title="מאומתים יומי - התחסנות"
+                filterLabel="ל-100 אלף תושבים, מעל גיל 60, עד עכשיו"
+                [legendItems]="vaxEffectLegend"
+                [options]="vaxEffectCasesOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 5. נפטרים -->
+    <section class="section" id="section-deceased">
+      <div class="section-info">
+        <div class="section-title"><h2 class="section-header">נפטרים</h2></div>
+      </div>
+      <ul class="cards">
+        <li>
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
+              <app-chart-card
+                title="נפטרים - יומי"
+                filterLabel="חודש אחרון"
+                [legendItems]="deceasedLegend"
+                [options]="deceasedDailyOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart">
+              <app-chart-card
+                title="נפטרים יומי – מצב התחסנות"
+                filterLabel="ל-100 אלף תושבים, מעל גיל 60, חודש אחרון"
+                [legendItems]="deceasedByVaxLegend"
+                [options]="deceasedByVaxOptions"
+              ></app-chart-card>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 6. בדיקות -->
     <section class="section" id="section-tests">
       <div class="section-info">
         <div class="section-title"><h2 class="section-header">בדיקות</h2></div>
-      </div>
-      <ul class="cards">
-        <li>
-          <ul class="cards-row chart-grid">
-            <li class="card-cell chart">
-              <app-chart-card
-                title="בדיקות יומיות לפי סוג"
-                [options]="testsOptions"
-              ></app-chart-card>
-            </li>
-            <li class="card-cell chart">
-              <app-chart-card
-                title="אחוז בדיקות חיוביות"
-                [options]="testsPositiveOptions"
-              ></app-chart-card>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ============== 4. אשפוז ============== -->
-    <section class="section" id="section-hospitalization">
-      <div class="section-info">
-        <div class="section-title"><h2 class="section-header">אשפוז</h2></div>
         <button type="button" class="links-btn">לינקים בנושא</button>
       </div>
       <ul class="cards">
         <li>
-          <ul class="cards-row mixed-grid">
-            @for (k of hospitalKpis; track k.title) {
-              <li class="card-cell kpi small">
-                <app-kpi-card
-                  [title]="k.title"
-                  [value]="k.value"
-                  [subtitle]="k.subtitle"
-                  [accent]="k.accent"
-                ></app-kpi-card>
-              </li>
-            }
-            <li class="card-cell chart full">
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
               <app-chart-card
-                title="מאושפזים וחולים קשה לאורך זמן"
-                [options]="hospitalTrendOptions"
+                title="אחוז נבדקים חיוביים"
+                filterLabel="חודש אחרון"
+                note="הנתונים אינם כוללים מידע על בדיקות לאבחון החלמה"
+                [legendItems]="positivePctLegend"
+                [options]="positivePctOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart">
+              <app-chart-card
+                title="מספר בדיקות קורונה - יומי"
+                filterLabel="חודש אחרון"
+                note="הנתונים אינם כוללים מידע על בדיקות לאבחון החלמה"
+                [legendItems]="testsLegend"
+                [options]="testsDailyOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart full">
+              <app-chart-card
+                title="מספר נבדקים לפי קבוצות גיל"
+                filterLabel="חודש אחרון"
+                [legendItems]="testsByAgeLegend"
+                [options]="testsByAgeOptions"
               ></app-chart-card>
             </li>
           </ul>
@@ -121,62 +193,28 @@
       </ul>
     </section>
 
-    <!-- ============== 5. תמותה ============== -->
-    <section class="section" id="section-mortality">
+    <!-- 7. תחקורים נוספים -->
+    <section class="section" id="section-investigations">
       <div class="section-info">
-        <div class="section-title"><h2 class="section-header">תמותה</h2></div>
-      </div>
-      <ul class="cards">
-        <li>
-          <ul class="cards-row mixed-grid">
-            @for (k of mortalityKpis; track k.title) {
-              <li class="card-cell kpi small">
-                <app-kpi-card
-                  [title]="k.title"
-                  [value]="k.value"
-                  [subtitle]="k.subtitle"
-                  [trend]="k.trend ?? null"
-                  [trendText]="k.trendText ?? ''"
-                  [accent]="k.accent"
-                ></app-kpi-card>
-              </li>
-            }
-            <li class="card-cell chart full">
-              <app-chart-card
-                title="נפטרים שבועי"
-                [options]="mortalityOptions"
-              ></app-chart-card>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ============== 6. חיסונים ============== -->
-    <section class="section" id="section-vaccinations">
-      <div class="section-info">
-        <div class="section-title"><h2 class="section-header">חיסונים</h2></div>
+        <div class="section-title"><h2 class="section-header">תחקורים נוספים</h2></div>
         <button type="button" class="links-btn">לינקים בנושא</button>
       </div>
       <ul class="cards">
         <li>
-          <ul class="cards-row kpi-grid">
-            @for (k of vaxKpis; track k.title) {
-              <li class="card-cell kpi">
-                <app-kpi-card
-                  [title]="k.title"
-                  [value]="k.value"
-                  [subtitle]="k.subtitle"
-                  [accent]="k.accent"
-                ></app-kpi-card>
-              </li>
-            }
-            <li class="card-cell chart full">
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
               <app-chart-card
-                title="שיעור מתחסנים לפי קבוצת גיל"
-                subtitle="% מתוך האוכלוסייה בקבוצה"
-                [options]="vaxByAgeOptions"
-                [height]="380"
+                title="ממוצע מאומתים שבועי"
+                [options]="weeklyCasesAvgOptions2"
+                [height]="280"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart">
+              <app-chart-card
+                title="תחקור תחלואה לאור אירועים והתחסנות"
+                filterLabel="היום"
+                [legendItems]="investigationsLegend"
+                [options]="investigationsTimelineOptions"
               ></app-chart-card>
             </li>
           </ul>
@@ -184,70 +222,77 @@
       </ul>
     </section>
 
-    <!-- ============== 7. רמזור יישובי ============== -->
-    <section class="section" id="section-traffic-light">
+    <!-- 8. תחלואה חוזרת ומחלימים -->
+    <section class="section" id="section-recovered">
       <div class="section-info">
-        <div class="section-title"><h2 class="section-header">רמזור יישובי</h2></div>
+        <div class="section-title"><h2 class="section-header">תחלואה חוזרת ומחלימים</h2></div>
       </div>
       <ul class="cards">
         <li>
-          <ul class="cards-row">
-            <li class="card-cell chart full">
-              <app-table-card
-                title="ציוני רמזור לפי יישוב"
-                subtitle="ניתן ללחוץ על כותרת לטור למיון"
-                [columns]="trafficColumns"
-                [rows]="trafficRows"
-              ></app-table-card>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ============== 8. וריאנטים ============== -->
-    <section class="section" id="section-variants">
-      <div class="section-info">
-        <div class="section-title"><h2 class="section-header">וריאנטים</h2></div>
-      </div>
-      <ul class="cards">
-        <li>
-          <ul class="cards-row">
-            <li class="card-cell chart full">
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
               <app-chart-card
-                title="תפוצת וריאנטים"
-                subtitle="מתוך דגימות שרוצפו בשבועיים האחרונים"
-                [options]="variantsOptions"
+                title="תחלואה חוזרת - גיל והתחסנות"
+                filterLabel="מספר המאומתים בקבוצת הגיל, חודש אחרון"
+                [legendItems]="recurrentByAgeLegend"
+                [options]="recurrentByAgeOptions"
                 [height]="360"
               ></app-chart-card>
             </li>
+            <li class="row-item chart">
+              <app-chart-card
+                title="תחלואה חוזרת לפי התחסנות - יומי"
+                filterLabel="חודש אחרון"
+                note="החולים בתחלואה חוזרת מהווים 8.7% מסך כל המחלימים"
+                [legendItems]="recurrentDailyLegend"
+                [options]="recurrentDailyOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart full">
+              <app-chart-card
+                title="מחלימים יומי"
+                filterLabel="חודש אחרון"
+                [legendItems]="recoveredLegend"
+                [options]="recoveredDailyOptions"
+              ></app-chart-card>
+            </li>
           </ul>
         </li>
       </ul>
     </section>
 
-    <!-- ============== 9. בידוד ============== -->
-    <section class="section" id="section-isolation">
+    <!-- 9. התחסנות האוכלוסיה -->
+    <section class="section" id="section-vaccination">
       <div class="section-info">
-        <div class="section-title"><h2 class="section-header">בידוד</h2></div>
+        <div class="section-title"><h2 class="section-header">התחסנות האוכלוסיה</h2></div>
+        <button type="button" class="links-btn">לינקים בנושא</button>
       </div>
       <ul class="cards">
         <li>
-          <ul class="cards-row mixed-grid">
-            @for (k of isolationKpis; track k.title) {
-              <li class="card-cell kpi small">
-                <app-kpi-card
-                  [title]="k.title"
-                  [value]="k.value"
-                  [subtitle]="k.subtitle"
-                  [accent]="k.accent"
-                ></app-kpi-card>
-              </li>
-            }
-            <li class="card-cell chart full">
+          <ul class="row-cards chart-row">
+            <li class="row-item chart">
               <app-chart-card
-                title="יציאות מבידוד לפי משך"
-                [options]="isolationDurationOptions"
+                title="מספר התחסנויות - יומי"
+                filterLabel="חודש אחרון"
+                [legendItems]="vaxDailyLegend"
+                [options]="vaxDailyOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart">
+              <app-chart-card
+                title="מתחסנים מצטבר"
+                filterLabel="מצב התחסנות, אחוז, חודש אחרון"
+                [legendItems]="vaxCumulativeLegend"
+                [options]="vaxCumulativeOptions"
+              ></app-chart-card>
+            </li>
+            <li class="row-item chart full">
+              <app-chart-card
+                title="אחוז מתחסנים לפי קבוצות גיל"
+                filterLabel="מצב התחסנות"
+                [legendItems]="vaxByAgeLegend"
+                [options]="vaxByAgeOptions"
+                [height]="360"
               ></app-chart-card>
             </li>
           </ul>

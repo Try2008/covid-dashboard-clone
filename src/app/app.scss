@@ -1,5 +1,6 @@
 .main {
   padding-top: 127px;
+  padding-right: 48px;
   min-height: 100vh;
   background: var(--body-bg);
 }
@@ -10,12 +11,13 @@
   padding: 24px 20px 80px;
 }
 
+/* ── Breadcrumb ── */
 .breadcrumb {
   font-size: 13px;
   color: var(--muted);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   margin-bottom: 16px;
 
   a {
@@ -58,7 +60,7 @@
 
   .links-btn {
     background: transparent;
-    border: 1px solid var(--border);
+    border: 1px solid rgb(230, 235, 242);
     border-radius: 18px;
     padding: 6px 14px;
     font-size: 13px;
@@ -72,74 +74,77 @@
 }
 
 /* ── Card lists (ul.cards > li > ul) ── */
-.cards { padding: 0; margin: 0; }
+.cards {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .cards > li { display: block; }
 
-.cards-row {
+.row-cards {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 10px;
   padding: 0;
   margin: 0;
 }
 
-.card-cell {
+.row-item {
   display: block;
   list-style: none;
 }
 
-/* KPI grid: auto-fit cards ~280px each */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-
-  .card-cell.kpi { min-width: 0; }
+.row-item.chart {
+  flex: 1 1 calc(50% - 5px);
+  min-width: 320px;
 }
 
-/* Chart grid: one wide card + one regular, or two equal */
-.chart-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-
-  .card-cell.chart       { min-width: 0; }
-  .card-cell.chart.wide  { grid-column: 1 / -1; }
+.row-item.chart.full {
+  flex: 1 1 100%;
 }
 
-/* Mixed grid: small KPIs in a row, chart spans full width below */
-.mixed-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-
-  .card-cell.kpi.small  { min-width: 0; }
-  .card-cell.chart.full { grid-column: 1 / -1; }
+.chart-row {
+  /* charts side-by-side on wide, single column on narrow */
+  .row-item.chart       { flex: 1 1 calc(50% - 5px); min-width: 320px; }
+  .row-item.chart.full  { flex: 1 1 100%; }
 }
 
-/* Single full-width cell */
-.cards-row > .card-cell.chart.full { width: 100%; }
+/* ── li.solid: 7-day summary group box ── */
+li.solid {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 3px 6px 14px 0 rgba(0, 0, 0, 0.1);
+  padding: 14px 20px;
+  margin: 0 10px;
 
-/* ── Responsive: ~464px viewport, single column ── */
+  .wrapper-header {
+    margin: 0 0 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary-dark);
+  }
+}
+
+/* ── Responsive ── */
 @media (max-width: 700px) {
-  .chart-grid { grid-template-columns: 1fr; }
+  .row-item.chart,
+  .chart-row .row-item.chart { flex: 1 1 100%; }
 }
 
 @media (max-width: 464px) {
-  .main { padding-top: 127px; }
+  .main {
+    padding-top: 127px;
+    padding-right: 48px;
+  }
   .page { padding: 18px 12px 60px; }
   .page-title { font-size: 22px; margin-bottom: 20px; }
 
   .section .section-header { font-size: 18px; }
   .section .links-btn { padding: 5px 10px; font-size: 12px; }
 
-  .kpi-grid,
-  .chart-grid,
-  .mixed-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .cards-row { gap: 12px; }
+  .row-cards { gap: 8px; }
+  li.solid { margin: 0; padding: 12px 14px; }
 }

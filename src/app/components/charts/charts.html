@@ -1,10 +1,48 @@
 <div class="chart-card">
-  <div class="chart-head">
-    <h3 class="chart-title">{{ title }}</h3>
-    @if (subtitle) {
-      <p class="chart-subtitle">{{ subtitle }}</p>
-    }
+  <div class="header">
+    <div class="title">
+      <h3 class="title-header">{{ title }}</h3>
+      @if (tooltipText) {
+        <div class="info">
+          <span class="info-icon" [title]="tooltipText" aria-label="מידע נוסף">ⓘ</span>
+        </div>
+      }
+    </div>
+
+    <div class="controls">
+      <button class="menu-dots" type="button" aria-label="אפשרויות">
+        <svg width="16" height="16" viewBox="0 0 4 16" aria-hidden="true">
+          <circle cx="2" cy="2"  r="1.5" fill="currentColor"/>
+          <circle cx="2" cy="8"  r="1.5" fill="currentColor"/>
+          <circle cx="2" cy="14" r="1.5" fill="currentColor"/>
+        </svg>
+      </button>
+
+      @if (filterLabel) {
+        <button class="trigger" type="button">
+          <span>{{ filterLabel }}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      }
+    </div>
   </div>
+
+  @if (note) {
+    <p class="chart-note">{{ note }}</p>
+  }
+
+  @if (legendItems.length) {
+    <div class="legend">
+      @for (item of legendItems; track item.label) {
+        <span class="legend-item">
+          <span class="legend-circle" [style.background]="item.color"></span>
+          <span class="legend-text">{{ item.label }}</span>
+        </span>
+      }
+    </div>
+  }
 
   <div class="chart-body">
     <highcharts-chart

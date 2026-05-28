@@ -8,9 +8,9 @@
       <li
         class="anchor-list-item"
         [class.selected]="i === selectedIndex()"
-        (click)="select(i)"
+        (click)="select(i); $event.preventDefault()"
       >
-        <a class="item-link-anchor" [href]="'#' + item.id">
+        <a class="item-link-anchor" [href]="'#' + item.id" (click)="$event.preventDefault()">
           <label class="item-link-anchor-label">{{ item.label }}</label>
         </a>
       </li>

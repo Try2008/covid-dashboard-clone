@@ -9,6 +9,30 @@
   z-index: 999999999;
 }
 
+.loading-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  pointer-events: none;
+
+  .line {
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--color-blue), var(--color-teal));
+    transform-origin: right;
+
+    &.active {
+      animation: loading-stripe 2.2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes loading-stripe {
+  0%   { opacity: 0.35; transform: scaleX(0.2); }
+  50%  { opacity: 1;    transform: scaleX(1); }
+  100% { opacity: 0.35; transform: scaleX(0.2); }
+}
+
 .header-container {
   display: flex;
   flex-direction: row;
@@ -26,37 +50,45 @@
 
   .hamburger {
     display: inline-flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    gap: 4px;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border: none;
     background: transparent;
-    padding: 8px;
+    padding: 6px;
     border-radius: 6px;
 
-    &:hover { background: #f1f4f9; }
+    span { display: inline-flex; }
 
-    span {
-      display: block;
-      height: 2px;
-      width: 100%;
-      background: var(--primary-dark);
-      border-radius: 2px;
-    }
+    &:hover { background: #f1f4f9; }
   }
 
-  .logo { display: inline-flex; align-items: center; }
+  .logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+
+    .logo-link { display: inline-flex; align-items: center; }
+
+    .logo {
+      display: block;
+      width: 39px;
+      height: 40px;
+      object-fit: contain;
+    }
+  }
 }
 
-.title-container {
+h1.title-container {
   flex: 1 1 auto;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-size: 32px;
   font-weight: 700;
   color: var(--primary-dark);
-  text-align: right;
 }
 
 .left-container { flex: 0 1 auto; }
@@ -84,6 +116,6 @@
 }
 
 @media (max-width: 600px) {
-  .title-container { font-size: 20px; }
+  h1.title-container { font-size: 18px; }
   .header-container { padding: 0 10px; gap: 8px; }
 }

@@ -1,0 +1,24 @@
+<div class="static" aria-label="תפריט צד">
+  <ul class="menu">
+    <li class="main-menu">
+      <button class="menu-title" type="button">
+        <span>עולם הדאטה</span>
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      <div class="items">
+        @for (it of topicItems; track it.label) {
+          <div class="item" [class.active]="it.active">{{ it.label }}</div>
+        }
+      </div>
+    </li>
+
+    <li class="footer-items">
+      @for (label of footerItems; track label) {
+        <button type="button" class="menu-item">{{ label }}</button>
+      }
+    </li>
+  </ul>
+</div>

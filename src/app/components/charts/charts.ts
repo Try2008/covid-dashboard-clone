@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
 
+export interface LegendItem {
+  label: string;
+  color: string;
+}
+
 @Component({
   selector: 'app-chart-card',
   standalone: true,
@@ -12,7 +17,10 @@ import * as Highcharts from 'highcharts';
 })
 export class ChartCardComponent {
   @Input({ required: true }) title = '';
-  @Input() subtitle = '';
+  @Input() tooltipText = '';
+  @Input() filterLabel = '';
+  @Input() note = '';
+  @Input() legendItems: LegendItem[] = [];
   @Input({ required: true }) options: Highcharts.Options = {};
   @Input() height = 320;
 

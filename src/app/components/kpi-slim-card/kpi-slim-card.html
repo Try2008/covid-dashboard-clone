@@ -1,0 +1,22 @@
+<div class="kpi-slim-card">
+  <h3 class="slim-title">{{ title }}</h3>
+
+  <div class="value-row">
+    <div class="main-value">{{ value }}</div>
+    @if (change) {
+      <div class="change" [attr.data-dir]="changeDirection">
+        @if (changeDirection === 'up') { ▲ }
+        @else if (changeDirection === 'down') { ▼ }
+        {{ change }}
+      </div>
+    }
+  </div>
+
+  @if (subtitle) {
+    <div class="subtitle">{{ subtitle }}</div>
+  }
+
+  @if (extra) {
+    <div class="extra">{{ extra }}</div>
+  }
+</div>
