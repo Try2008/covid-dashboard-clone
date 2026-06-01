@@ -139,16 +139,19 @@ export class ChartCardComponent implements OnInit, OnChanges {
     }
 
     const categories = xAxis.categories as string[];
-    const isDateCategories = categories.length > 5 && categories.some(cat => /^\d{2}\.\d{2}$/.test(cat));
+    const isDateCategories =
+      categories.length > 5 && categories.some(cat => /^\d{2}\.\d{2}(\.\d{2})?$/.test(cat));
 
+    // Only date-based (time-series) charts respond to the range filter. Static
+    // category charts (age groups, etc.) are shown unchanged across all ranges.
     if (isDateCategories) {
       let sliceCount = categories.length;
-      if (this.selectedTimeRange === 'week') {
+      if (this.selectedTimeRange === 'today') {
+        sliceCount = 1;
+      } else if (this.selectedTimeRange === 'week') {
         sliceCount = 7;
       } else if (this.selectedTimeRange === 'month') {
-        sliceCount = 29;
-      } else if (this.selectedTimeRange === 'all') {
-        sliceCount = categories.length;
+        sliceCount = 30;
       }
 
       if (sliceCount < categories.length) {
@@ -161,29 +164,6 @@ export class ChartCardComponent implements OnInit, OnChanges {
             return s;
           });
         }
-      }
-    } else {
-      let multiplier = 1.0;
-      if (this.selectedTimeRange === 'week') {
-        multiplier = 7 / 29;
-      } else if (this.selectedTimeRange === 'all') {
-        multiplier = 90 / 29;
-      }
-
-      if (multiplier !== 1.0 && Array.isArray(newOpts.series)) {
-        newOpts.series = newOpts.series.map((s: any) => {
-          if (s.data && Array.isArray(s.data)) {
-            s.data = s.data.map((val: any) => {
-              if (typeof val === 'number') {
-                return Math.round(val * multiplier);
-              } else if (val && typeof val === 'object' && typeof val.y === 'number') {
-                return { ...val, y: Math.round(val.y * multiplier) };
-              }
-              return val;
-            });
-          }
-          return s;
-        });
       }
     }
 

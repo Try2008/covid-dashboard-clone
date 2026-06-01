@@ -29,10 +29,17 @@
 }
 
 .page-title {
-  margin: 0 0 28px;
+  margin: 0 0 6px;
   font-size: 24px;
   font-weight: 700;
   color: var(--primary-dark);
+  text-align: center;
+}
+
+.last-updated {
+  margin: 0 0 28px;
+  font-size: 13px;
+  color: var(--muted);
   text-align: center;
 }
 

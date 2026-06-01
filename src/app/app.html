@@ -12,6 +12,7 @@
     </nav>
 
     <h1 class="page-title">{{ pageTitle }}</h1>
+    <p class="last-updated">{{ lastUpdatedLabel }}</p>
 
     <!-- 1. Overview -->
     <section class="section" id="section-overview">
@@ -72,7 +73,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleNewCasesDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [legendItems]="newCasesLegend()"
                 [options]="newCasesDailyOptions()"
               ></app-chart-card>
@@ -93,7 +94,7 @@
             <li class="row-item chart full">
               <app-chart-card
                 [title]="titleChildrenTrend"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [legendItems]="childrenLegend"
                 [options]="childrenTrendOptions()"
               ></app-chart-card>
@@ -135,7 +136,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleDeceasedDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [legendItems]="deceasedLegend()"
                 [options]="deceasedDailyOptions()"
               ></app-chart-card>
@@ -143,7 +144,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleDeceasedByVax"
-                [filterLabel]="filterVaxEffectAge60Month"
+                [filterLabel]="filterVaxEffectAge60All"
                 [legendItems]="deceasedByVaxLegend()"
                 [options]="deceasedByVaxOptions()"
               ></app-chart-card>
@@ -165,7 +166,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titlePositivePct"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [note]="noteNoRecovery"
                 [legendItems]="positivePctLegend()"
                 [options]="positivePctOptions()"
@@ -174,7 +175,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleTestsDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [note]="noteNoRecovery"
                 [legendItems]="testsLegend()"
                 [options]="testsDailyOptions()"
@@ -212,7 +213,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleInvestigations"
-                [filterLabel]="filterToday"
+                [filterLabel]="filterAll"
                 [legendItems]="investigationsLegend()"
                 [options]="investigationsTimelineOptions()"
               ></app-chart-card>
@@ -242,7 +243,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleRecurrentDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [note]="noteRecurrentShare"
                 [legendItems]="recurrentDailyLegend()"
                 [options]="recurrentDailyOptions()"
@@ -251,7 +252,7 @@
             <li class="row-item chart full">
               <app-chart-card
                 [title]="titleRecoveredDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [legendItems]="recoveredLegend()"
                 [options]="recoveredDailyOptions()"
               ></app-chart-card>
@@ -273,7 +274,7 @@
             <li class="row-item chart">
               <app-chart-card
                 [title]="titleVaxDaily"
-                [filterLabel]="filterMonth"
+                [filterLabel]="filterAll"
                 [legendItems]="vaxDailyLegend()"
                 [options]="vaxDailyOptions()"
               ></app-chart-card>

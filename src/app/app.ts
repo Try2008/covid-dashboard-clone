@@ -8,6 +8,7 @@ import { KpiCardComponent } from './components/overview/overview';
 import { KpiSlimCard } from './components/kpi-slim-card/kpi-slim-card';
 import { ChartCardComponent, LegendItem } from './components/charts/charts';
 import { AppState } from './services/app-state';
+import { CovidData } from './services/covid-data';
 
 const C = {
   blue:   '#50cbfd',
@@ -16,19 +17,6 @@ const C = {
   teal:   '#007f7f',
   purple: '#baa1ef',
 };
-
-function dailyDates(startDay: number, startMonth: number, count: number): string[] {
-  const dates: string[] = [];
-  let d = startDay;
-  let m = startMonth;
-  const daysInMonth = (mm: number) => [31,28,31,30,31,30,31,31,30,31,30,31][mm - 1];
-  for (let i = 0; i < count; i++) {
-    dates.push(`${String(d).padStart(2, '0')}.${String(m).padStart(2, '0')}`);
-    d++;
-    if (d > daysInMonth(m)) { d = 1; m++; }
-  }
-  return dates;
-}
 
 @Component({
   selector: 'app-root',
@@ -47,6 +35,7 @@ function dailyDates(startDay: number, startMonth: number, count: number): string
 })
 export class App {
   readonly app = inject(AppState);
+  readonly data = inject(CovidData);
 
   private t(he: string, en: string): string {
     return this.app.t(he, en);
@@ -58,6 +47,7 @@ export class App {
   get pageTitle() { return this.t('קורונה', 'Coronavirus'); }
   get linksBtnLabel() { return this.t('לינקים בנושא', 'Related links'); }
   get sevenDaySummaryHeader() { return this.t('סיכום 7 ימים אחרונים', 'Last 7-day summary'); }
+  get lastUpdatedLabel() { return this.data.lastUpdatedLabel; }
 
   get sectionOverview()           { return this.t('מבט על', 'Overview'); }
   get sectionMainIndicators()     { return this.t('מדדים מרכזיים', 'Key indicators'); }
@@ -127,12 +117,11 @@ export class App {
 
   /* ════════ Filter & misc labels (used as inputs to chart cards) ════════ */
   get filterMonth() { return this.t('חודש אחרון', 'Last month'); }
+  get filterAll() { return this.t('עד עכשיו', 'To date'); }
   get filterVaxEffectAge60All() { return this.t('ל-100 אלף תושבים, מעל גיל 60, עד עכשיו', 'per 100K, age 60+, to date'); }
-  get filterVaxEffectAge60Month() { return this.t('ל-100 אלף תושבים, מעל גיל 60, חודש אחרון', 'per 100K, age 60+, last month'); }
   get filterRecurrentAge() { return this.t('מספר המאומתים בקבוצת הגיל, חודש אחרון', 'Confirmed cases in age group, last month'); }
-  get filterVaxCumulative() { return this.t('מצב התחסנות, אחוז, חודש אחרון', 'Vaccination status, percent, last month'); }
+  get filterVaxCumulative() { return this.t('מצב התחסנות, אחוז, עד עכשיו', 'Vaccination status, percent, to date'); }
   get filterVaxStatus() { return this.t('מצב התחסנות', 'Vaccination status'); }
-  get filterToday() { return this.t('היום', 'Today'); }
 
   get noteNoRecovery() { return this.t('הנתונים אינם כוללים מידע על בדיקות לאבחון החלמה', 'Data does not include tests for recovery diagnosis'); }
   get noteRecurrentShare() { return this.t('החולים בתחלואה חוזרת מהווים 8.7% מסך כל המחלימים', 'Reinfections make up 8.7% of all recoveries'); }
@@ -155,21 +144,21 @@ export class App {
   get titleVaxCumulative()  { return this.t('מתחסנים מצטבר', 'Cumulative vaccinated'); }
   get titleVaxByAge()       { return this.t('אחוז מתחסנים לפי קבוצות גיל', 'Vaccination % by age group'); }
 
-  /* ════════ Chart data ════════ */
-  private monthDates = dailyDates(18, 4, 29);  // 18.04 → 16.05
+  /* ════════ Chart data (sourced from the CovidData snapshot) ════════ */
+  private get cats() { return this.data.cats; }
 
   readonly weeklyCasesAvgOptions = computed<Highcharts.Options>(() => this.column(
-    ['26.04-02.05', '03.05-09.05', '10.05-16.05'],
-    [{ name: this.t('ממוצע', 'Average'), data: [7, 8, 5], color: C.blue }],
-    { yMax: 10, reverseX: true, hideLegend: true },
+    this.data.weeklyAvgCats,
+    [{ name: this.t('ממוצע', 'Average'), data: this.data.weeklyAvgVals, color: C.blue }],
+    { reverseX: true, hideLegend: true },
   ));
   readonly weeklyCasesAvgOptions2 = this.weeklyCasesAvgOptions;
 
   readonly newCasesDailyOptions = computed<Highcharts.Options>(() => this.comboBarLine(
-    this.monthDates,
+    this.cats,
     {
-      bar:  { name: this.t('מאומתים חדשים',    'New confirmed'),         data: this.noisySeries(29, 1, 0.6),  color: C.blue },
-      line: { name: this.t('ממוצע נע מאומתים', 'Moving avg - confirmed'), data: this.smoothSeries(29, 1.1, 0.3), color: C.orange },
+      bar:  { name: this.t('מאומתים חדשים',    'New confirmed'),         data: this.data.confirmed,                       color: C.blue },
+      line: { name: this.t('ממוצע נע מאומתים', 'Moving avg - confirmed'), data: this.data.movingAvg(this.data.confirmed), color: C.orange },
     },
     { reverseX: true },
   ));
@@ -179,14 +168,14 @@ export class App {
   ]);
 
   readonly childrenTrendOptions = computed<Highcharts.Options>(() => this.multiLine(
-    this.monthDates,
+    this.cats,
     [
-      { name: '0-4',   data: this.smoothSeries(29, 0.30, 0.18), color: C.blue },
-      { name: '5-11',  data: this.smoothSeries(29, 0.45, 0.22), color: C.green },
-      { name: '12-15', data: this.smoothSeries(29, 0.20, 0.15), color: C.teal },
-      { name: '16-19', data: this.smoothSeries(29, 0.35, 0.20), color: C.purple },
+      { name: '0-4',   data: this.data.children.a04,   color: C.blue },
+      { name: '5-11',  data: this.data.children.a511,  color: C.green },
+      { name: '12-15', data: this.data.children.a1215, color: C.teal },
+      { name: '16-19', data: this.data.children.a1619, color: C.purple },
     ],
-    { reverseX: true, yMax: 1 },
+    { reverseX: true },
   ));
   readonly childrenLegend: LegendItem[] = [
     { label: '0-4',   color: C.blue },
@@ -196,13 +185,13 @@ export class App {
   ];
 
   readonly vaxEffectCasesOptions = computed<Highcharts.Options>(() => this.multiLine(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.smoothSeries(29, 540, 90), color: C.blue },
-      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.smoothSeries(29, 320, 60), color: C.green },
-      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.smoothSeries(29, 140, 40), color: C.teal },
+      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.data.vaxEffUnvax,   color: C.blue },
+      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.data.vaxEffExpired, color: C.green },
+      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.data.vaxEffVax,     color: C.teal },
     ],
-    { reverseX: true, yMax: 750 },
+    { reverseX: true },
   ));
   readonly vaxEffectLegend = computed<LegendItem[]>(() => [
     { label: this.t('לא מחוסנים',       'Unvaccinated'),       color: C.blue },
@@ -211,10 +200,10 @@ export class App {
   ]);
 
   readonly deceasedDailyOptions = computed<Highcharts.Options>(() => this.comboBarLine(
-    this.monthDates,
+    this.cats,
     {
-      bar:  { name: this.t('נפטרים',          'Deaths'),                 data: this.noisySeries(29, 0.7, 0.4), color: C.teal },
-      line: { name: this.t('ממוצע נע נפטרים', 'Moving avg - deaths'),    data: this.smoothSeries(29, 0.8, 0.25), color: C.orange },
+      bar:  { name: this.t('נפטרים',          'Deaths'),              data: this.data.deaths,                       color: C.teal },
+      line: { name: this.t('ממוצע נע נפטרים', 'Moving avg - deaths'), data: this.data.movingAvg(this.data.deaths), color: C.orange },
     },
     { reverseX: true },
   ));
@@ -224,23 +213,23 @@ export class App {
   ]);
 
   readonly deceasedByVaxOptions = computed<Highcharts.Options>(() => this.multiLine(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.smoothSeries(29, 0.32, 0.06), color: C.blue },
-      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.smoothSeries(29, 0.18, 0.04), color: C.green },
-      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.smoothSeries(29, 0.07, 0.02), color: C.teal },
+      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.data.deathVaxUnvax,   color: C.blue },
+      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.data.deathVaxExpired, color: C.green },
+      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.data.deathVaxVax,     color: C.teal },
     ],
-    { reverseX: true, yMax: 0.5 },
+    { reverseX: true },
   ));
   readonly deceasedByVaxLegend = this.vaxEffectLegend;
 
   readonly positivePctOptions = computed<Highcharts.Options>(() => this.multiLine(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('חיוביים בPCR',          'Positive - PCR'),               data: this.smoothSeries(29, 2.2, 0.6), color: C.blue },
-      { name: this.t('חיוביים באנטיגן מוסדי', 'Positive - institutional antigen'), data: this.smoothSeries(29, 1.4, 0.5), color: C.green },
+      { name: this.t('חיוביים בPCR',          'Positive - PCR'),               data: this.data.posPCR,     color: C.blue },
+      { name: this.t('חיוביים באנטיגן מוסדי', 'Positive - institutional antigen'), data: this.data.posAntigen, color: C.green },
     ],
-    { reverseX: true, yMax: 10, ySuffix: '%' },
+    { reverseX: true, ySuffix: '%' },
   ));
   readonly positivePctLegend = computed<LegendItem[]>(() => [
     { label: this.t('חיוביים בPCR',          'Positive - PCR'),                  color: C.blue },
@@ -248,12 +237,12 @@ export class App {
   ]);
 
   readonly testsDailyOptions = computed<Highcharts.Options>(() => this.stackedBarWithLine(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('בדיקות PCR',  'PCR tests'),            data: this.noisySeries(29, 1800, 600), color: C.blue },
-      { name: this.t('אנטיגן מוסדי', 'Institutional antigen'), data: this.noisySeries(29, 900,  300), color: C.green },
+      { name: this.t('בדיקות PCR',  'PCR tests'),            data: this.data.testsPCR,     color: C.blue },
+      { name: this.t('אנטיגן מוסדי', 'Institutional antigen'), data: this.data.testsAntigen, color: C.green },
     ],
-    { name: this.t('ממוצע נע סך הבדיקות', 'Moving avg - total tests'), data: this.smoothSeries(29, 2700, 600), color: C.orange },
+    { name: this.t('ממוצע נע סך הבדיקות', 'Moving avg - total tests'), data: this.data.movingAvg(this.data.testsTotal), color: C.orange },
     { reverseX: true },
   ));
   readonly testsLegend = computed<LegendItem[]>(() => [
@@ -275,9 +264,9 @@ export class App {
   ]);
 
   readonly investigationsTimelineOptions = computed<Highcharts.Options>(() => this.comboBarPercent(
-    this.monthDates,
-    { name: this.t('מאומתים',          'Confirmed'),                     data: this.noisySeries(29, 8, 4),  color: C.blue, axis: 0 },
-    { name: this.t('% מחוסנים מצטבר',  '% cumulative vaccinated'),       data: this.cumulativePercent(29, 72, 76), color: C.teal, axis: 1 },
+    this.cats,
+    { name: this.t('מאומתים',          'Confirmed'),                     data: this.data.confirmed, color: C.blue, axis: 0 },
+    { name: this.t('% מחוסנים מצטבר',  '% cumulative vaccinated'),       data: this.data.cumVaxPct, color: C.teal, axis: 1 },
     { reverseX: true },
   ));
   readonly investigationsLegend = computed<LegendItem[]>(() => [
@@ -297,15 +286,18 @@ export class App {
     { label: this.t('מחוסנים',    'Vaccinated'),   color: C.teal },
   ]);
 
-  readonly recurrentDailyOptions = computed<Highcharts.Options>(() => this.stackedBarWithLine(
-    this.monthDates,
-    [
-      { name: this.t('לא מחוסנים', 'Unvaccinated'), data: this.noisySeries(29, 4, 2), color: C.blue },
-      { name: this.t('מחוסנים',    'Vaccinated'),   data: this.noisySeries(29, 7, 3), color: C.teal },
-    ],
-    { name: this.t('ממוצע נע סך מאומתים', 'Moving avg - total confirmed'), data: this.smoothSeries(29, 11, 3), color: C.orange },
-    { reverseX: true },
-  ));
+  readonly recurrentDailyOptions = computed<Highcharts.Options>(() => {
+    const total = this.data.reinfUnvax.map((v, i) => v + this.data.reinfVax[i]);
+    return this.stackedBarWithLine(
+      this.cats,
+      [
+        { name: this.t('לא מחוסנים', 'Unvaccinated'), data: this.data.reinfUnvax, color: C.blue },
+        { name: this.t('מחוסנים',    'Vaccinated'),   data: this.data.reinfVax,   color: C.teal },
+      ],
+      { name: this.t('ממוצע נע סך מאומתים', 'Moving avg - total confirmed'), data: this.data.movingAvg(total), color: C.orange },
+      { reverseX: true },
+    );
+  });
   readonly recurrentDailyLegend = computed<LegendItem[]>(() => [
     { label: this.t('לא מחוסנים',           'Unvaccinated'),                color: C.blue },
     { label: this.t('מחוסנים',              'Vaccinated'),                  color: C.teal },
@@ -313,10 +305,10 @@ export class App {
   ]);
 
   readonly recoveredDailyOptions = computed<Highcharts.Options>(() => this.comboBarLine(
-    this.monthDates,
+    this.cats,
     {
-      bar:  { name: this.t('מחלימים',          'Recoveries'),              data: this.noisySeries(29, 28, 12), color: C.teal },
-      line: { name: this.t('ממוצע נע מחלימים', 'Moving avg - recoveries'), data: this.smoothSeries(29, 30, 6), color: C.orange },
+      bar:  { name: this.t('מחלימים',          'Recoveries'),              data: this.data.recoveries,                       color: C.teal },
+      line: { name: this.t('ממוצע נע מחלימים', 'Moving avg - recoveries'), data: this.data.movingAvg(this.data.recoveries), color: C.orange },
     },
     { reverseX: true },
   ));
@@ -326,12 +318,12 @@ export class App {
   ]);
 
   readonly vaxDailyOptions = computed<Highcharts.Options>(() => this.stackedColumn(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('מנה 1', 'Dose 1'), data: this.noisySeries(29, 110, 40), color: C.blue },
-      { name: this.t('מנה 2', 'Dose 2'), data: this.noisySeries(29,  80, 30), color: C.green },
-      { name: this.t('מנה 3', 'Dose 3'), data: this.noisySeries(29,  60, 25), color: C.teal },
-      { name: this.t('מנה 4', 'Dose 4'), data: this.noisySeries(29,  35, 20), color: C.purple },
+      { name: this.t('מנה 1', 'Dose 1'), data: this.data.dose1, color: C.blue },
+      { name: this.t('מנה 2', 'Dose 2'), data: this.data.dose2, color: C.green },
+      { name: this.t('מנה 3', 'Dose 3'), data: this.data.dose3, color: C.teal },
+      { name: this.t('מנה 4', 'Dose 4'), data: this.data.dose4, color: C.purple },
     ],
     { reverseX: true },
   ));
@@ -343,11 +335,11 @@ export class App {
   ]);
 
   readonly vaxCumulativeOptions = computed<Highcharts.Options>(() => this.stackedArea(
-    this.monthDates,
+    this.cats,
     [
-      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.smoothSeries(29, 22, 1), color: C.blue },
-      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.smoothSeries(29, 28, 1), color: C.green },
-      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.smoothSeries(29, 50, 1), color: C.teal },
+      { name: this.t('לא מחוסנים',       'Unvaccinated'),       data: this.data.shareUnvax,   color: C.blue },
+      { name: this.t('מחוסנים ללא תוקף', 'Expired vaccination'), data: this.data.shareExpired, color: C.green },
+      { name: this.t('מחוסנים',          'Vaccinated'),         data: this.data.shareVax,     color: C.teal },
     ],
     { reverseX: true, yMax: 100, ySuffix: '%' },
   ));
@@ -366,17 +358,25 @@ export class App {
 
   /* ════════ Highcharts builder helpers ════════ */
 
+  private chartBg(): string {
+    return this.app.dark() ? '#1c2330' : '#ffffff';
+  }
+
+  /** Chart-level options shared by every builder (preserves theme bg, no anim). */
+  private chartOpts(type: string): Highcharts.ChartOptions {
+    return { type: type as Highcharts.ChartOptions['type'], backgroundColor: this.chartBg(), animation: false };
+  }
+
   private base(): Highcharts.Options {
     const dark = this.app.dark();
     const axisLine  = dark ? '#2a3340' : '#e6ebf2';
     const gridLine  = dark ? '#2a3340' : '#eef1f6';
     const labelColor = dark ? '#8b95a6' : '#8794a3';
-    const bg        = dark ? '#1c2330' : '#ffffff';
+    const bg        = this.chartBg();
     return {
       credits: { enabled: false },
       title:   { text: undefined },
       legend:  { enabled: false },
-      chart:   { backgroundColor: bg },
       tooltip: {
         shared: true,
         useHTML: true,
@@ -419,7 +419,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(o.yMax),
       plotOptions: { column: { borderRadius: 3, pointPadding: 0.15, groupPadding: 0.15 } },
@@ -434,7 +434,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'line' },
+      chart: this.chartOpts('line'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(o.yMax, o.ySuffix ?? ''),
       series: series.map(s => ({ type: 'line', marker: { enabled: false }, lineWidth: 2, ...s })),
@@ -451,7 +451,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(),
       plotOptions: { column: { borderRadius: 2, pointPadding: 0.04, groupPadding: 0.05 } },
@@ -469,7 +469,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(),
       plotOptions: { column: { stacking: 'normal', borderRadius: 0, pointPadding: 0.04, groupPadding: 0.05 } },
@@ -485,7 +485,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(),
       plotOptions: { column: { stacking: 'normal', borderRadius: 0, pointPadding: 0.04, groupPadding: 0.05 } },
@@ -505,7 +505,7 @@ export class App {
     const baseY = this.yAxisOpts();
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: [
         baseY,
@@ -525,7 +525,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'column' },
+      chart: this.chartOpts('column'),
       xAxis: this.xAxis(categories, false),
       yAxis: this.yAxisOpts(),
       plotOptions: { column: { borderRadius: 3, pointPadding: 0.1, groupPadding: 0.12 } },
@@ -539,7 +539,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'bar' },
+      chart: this.chartOpts('bar'),
       xAxis: { ...(this.base().xAxis as Highcharts.XAxisOptions), categories },
       yAxis: this.yAxisOpts(),
       plotOptions: { bar: { borderRadius: 2 } },
@@ -554,7 +554,7 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'bar' },
+      chart: this.chartOpts('bar'),
       xAxis: { ...(this.base().xAxis as Highcharts.XAxisOptions), categories },
       yAxis: this.yAxisOpts(100, o.ySuffix ?? ''),
       plotOptions: { bar: { stacking: 'percent', borderRadius: 0 } },
@@ -569,42 +569,11 @@ export class App {
   ): Highcharts.Options {
     return {
       ...this.base(),
-      chart: { type: 'area' },
+      chart: this.chartOpts('area'),
       xAxis: this.xAxis(categories, !!o.reverseX),
       yAxis: this.yAxisOpts(o.yMax, o.ySuffix ?? ''),
       plotOptions: { area: { stacking: 'percent', fillOpacity: 0.55, lineWidth: 1, marker: { enabled: false } } },
       series: series.map(s => ({ type: 'area', ...s })),
     };
-  }
-
-  /* ════════ Mock-data generators (deterministic) ════════ */
-
-  private prng(seed: number): () => number {
-    let s = seed | 0;
-    return () => {
-      s = (s * 9301 + 49297) % 233280;
-      return s / 233280;
-    };
-  }
-
-  private noisySeries(n: number, base: number, jitter: number, seed = 7): number[] {
-    const r = this.prng(seed + Math.floor(base));
-    return Array.from({ length: n }, () => Math.max(0, +(base + (r() - 0.5) * 2 * jitter).toFixed(2)));
-  }
-
-  private smoothSeries(n: number, base: number, drift: number, seed = 11): number[] {
-    const r = this.prng(seed + Math.floor(base * 100));
-    const out: number[] = [];
-    let v = base;
-    for (let i = 0; i < n; i++) {
-      v = Math.max(0, v + (r() - 0.5) * drift * 0.6);
-      out.push(+v.toFixed(2));
-    }
-    return out;
-  }
-
-  private cumulativePercent(n: number, start: number, end: number): number[] {
-    const step = (end - start) / Math.max(1, n - 1);
-    return Array.from({ length: n }, (_, i) => +(start + step * i).toFixed(2));
   }
 }
