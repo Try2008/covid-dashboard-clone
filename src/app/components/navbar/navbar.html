@@ -1,10 +1,10 @@
 <nav>
-  <button type="button" class="arrow arrow-right" aria-label="גלול ימינה" (click)="scroll(1)">
+  <button type="button" class="arrow arrow-right" [attr.aria-label]="arrowStartAria" (click)="scroll(1)">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5l8 7-8 7z"/></svg>
   </button>
 
   <ul class="anchor-list" #list>
-    @for (item of items; track item.id; let i = $index) {
+    @for (item of items(); track item.id; let i = $index) {
       <li
         class="anchor-list-item"
         [class.selected]="i === selectedIndex()"
@@ -17,7 +17,7 @@
     }
   </ul>
 
-  <button type="button" class="arrow arrow-left" aria-label="גלול שמאלה" (click)="scroll(-1)">
+  <button type="button" class="arrow arrow-left" [attr.aria-label]="arrowEndAria" (click)="scroll(-1)">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M16 5l-8 7 8 7z"/></svg>
   </button>
 </nav>

@@ -6,6 +6,13 @@
   --body-bg: #f8fafd;
   --muted: #8794a3;
   --border: #e6ebf2;
+  --surface-2: #f1f4f9;
+  --hover-bg: #f0f4f8;
+  --hover-bg-strong: #eef2f6;
+  --footer-bg: #fafbfc;
+  --chip-bg: #f7f9fc;
+  --chip-border: #e4e9f2;
+  --dropdown-bg: #ffffff;
 
   --color-blue: #50cbfd;
   --color-orange: #ff7d67;
@@ -22,6 +29,27 @@
   --nav-h: 63px;
 }
 
+html.dark {
+  --primary-dark: #e6edf5;
+  --nav-bg: #1f2a36;
+  --card-bg: #1c2330;
+  --body-bg: #121821;
+  --muted: #8b95a6;
+  --border: #2a3340;
+  --surface-2: #232c3a;
+  --hover-bg: #232c3a;
+  --hover-bg-strong: #2a3340;
+  --footer-bg: #1a212c;
+  --chip-bg: #232c3a;
+  --chip-border: #2a3340;
+  --dropdown-bg: #1c2330;
+
+  --card-shadow: 3px 3px 11px 0 rgba(0, 0, 0, 0.45);
+  --slim-shadow: 0 3px 15px -2px rgba(0, 0, 0, 0.55);
+  --header-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.7);
+  --nav-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -30,9 +58,9 @@ html, body {
   background: var(--body-bg);
   color: var(--primary-dark);
   font-family: 'Open Sans Hebrew', sans-serif;
-  direction: rtl;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 ul { list-style: none; margin: 0; padding: 0; }

@@ -1,9 +1,9 @@
 :host { display: block; height: 100%; }
 
 .chart-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 3px 3px 11px 0 rgba(70, 90, 122, 0.11);
+  box-shadow: var(--card-shadow);
   padding: 12px 16px 14px;
   height: 100%;
   display: flex;
@@ -49,6 +49,7 @@ h3.title-header {
   display: flex;
   align-items: center;
   gap: 6px;
+  position: relative;
 }
 
 button.menu-dots {
@@ -60,13 +61,13 @@ button.menu-dots {
   border-radius: 4px;
   line-height: 0;
 
-  &:hover { background: #f1f4f9; }
+  &:hover { background: var(--surface-2); }
 }
 
 button.trigger {
-  background: rgb(247, 249, 252);
+  background: var(--chip-bg);
   color: var(--primary-dark);
-  border: 1px solid rgb(228, 233, 242);
+  border: 1px solid var(--chip-border);
   border-radius: 24px;
   font-size: 13px;
   font-weight: 600;
@@ -76,14 +77,80 @@ button.trigger {
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
 
-  &:hover { background: #eef2f8; }
+  &:hover {
+    background: var(--hover-bg-strong);
+    border-color: var(--border);
+  }
+
+  .trigger-chevron {
+    transition: transform 0.2s ease;
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 100%;
+  inset-inline-start: 0;
+  margin-top: 6px;
+  background: var(--dropdown-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+  min-width: 130px;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  ul {
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  li {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: start;
+    transition: background 0.12s, color 0.12s;
+
+    &:hover {
+      background: var(--hover-bg);
+      color: var(--primary-dark);
+    }
+
+    &.active {
+      background: var(--hover-bg-strong);
+      font-weight: 700;
+      color: var(--nav-bg);
+    }
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .chart-note {
   margin: 2px 0 6px;
   font-size: 11px;
-  color: #8b95a6;
+  color: var(--muted);
 }
 
 .legend {

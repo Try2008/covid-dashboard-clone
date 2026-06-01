@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppState } from '../../services/app-state';
 
 export interface KpiSubRow {
   label: string;
@@ -18,4 +19,10 @@ export class KpiCardComponent {
   @Input() tooltipText = '';
   @Input() mainValue: string | null = null;
   @Input() subRows: KpiSubRow[] = [];
+
+  private readonly app = inject(AppState);
+
+  get infoAria(): string {
+    return this.app.t('מידע נוסף', 'More info');
+  }
 }

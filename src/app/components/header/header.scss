@@ -4,7 +4,7 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   height: 64px;
-  background: #fff;
+  background: var(--card-bg);
   box-shadow: var(--header-shadow);
   z-index: 999999999;
 }
@@ -56,12 +56,13 @@
     height: 40px;
     border: none;
     background: transparent;
+    color: var(--primary-dark);
     padding: 6px;
     border-radius: 6px;
 
     span { display: inline-flex; }
 
-    &:hover { background: #f1f4f9; }
+    &:hover { background: var(--surface-2); }
   }
 
   .logo-wrapper {
@@ -95,10 +96,11 @@ h1.title-container {
 
 .icons-container {
   flex: 0 1 auto;
-  width: 70px;
+  width: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 4px;
 
   .icon-btn {
     width: 32px;
@@ -111,7 +113,13 @@ h1.title-container {
     color: var(--primary-dark);
     border-radius: 50%;
 
-    &:hover { background: #f1f4f9; }
+    &:hover { background: var(--surface-2); }
+
+    &.lang-btn {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
   }
 }
 

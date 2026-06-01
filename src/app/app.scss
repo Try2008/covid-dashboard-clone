@@ -1,6 +1,6 @@
 .main {
   padding-top: 127px;
-  padding-right: 48px;
+  padding-inline-end: 48px;
   min-height: 100vh;
   background: var(--body-bg);
 }
@@ -60,7 +60,7 @@
 
   .links-btn {
     background: transparent;
-    border: 1px solid rgb(230, 235, 242);
+    border: 1px solid var(--border);
     border-radius: 18px;
     padding: 6px 14px;
     font-size: 13px;
@@ -69,7 +69,7 @@
     box-shadow: var(--slim-shadow);
     transition: background 0.15s;
 
-    &:hover { background: #fff; }
+    &:hover { background: var(--card-bg); }
   }
 }
 
@@ -114,9 +114,9 @@
 
 /* ── li.solid: 7-day summary group box ── */
 li.solid {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 3px 6px 14px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--card-shadow);
   padding: 14px 20px;
   margin: 0 10px;
 
@@ -137,7 +137,7 @@ li.solid {
 @media (max-width: 464px) {
   .main {
     padding-top: 127px;
-    padding-right: 48px;
+    padding-inline-end: 48px;
   }
   .page { padding: 18px 12px 60px; }
   .page-title { font-size: 22px; margin-bottom: 20px; }

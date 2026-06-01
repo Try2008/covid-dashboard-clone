@@ -5,22 +5,22 @@
 
   <div class="header-container">
     <div class="logo-container">
-      <button class="hamburger" aria-label="תפריט">
+      <button class="hamburger" [attr.aria-label]="menuAria">
         <span>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="3" y1="6"  x2="21" y2="6"  stroke="#222b45" stroke-width="2" stroke-linecap="round"/>
-            <line x1="3" y1="12" x2="21" y2="12" stroke="#222b45" stroke-width="2" stroke-linecap="round"/>
-            <line x1="3" y1="18" x2="21" y2="18" stroke="#222b45" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="6"  x2="21" y2="6"  stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </span>
       </button>
 
       <div class="logo-wrapper">
-        <a href="/" class="logo-link" aria-label="עולם הדאטה">
+        <a href="/" class="logo-link" [attr.aria-label]="logoAria">
           <img
             class="logo"
             src="https://datadashboard.health.gov.il/assets/images/logo_new.png"
-            alt="לוגו משרד הבריאות"
+            [attr.alt]="logoAlt"
             width="39"
             height="40"
           />
@@ -28,21 +28,25 @@
       </div>
     </div>
 
-    <h1 class="title-container">עולם הדאטה</h1>
+    <h1 class="title-container">{{ title }}</h1>
 
     <div class="left-container"></div>
 
     <div class="icons-container">
-      <button class="icon-btn" aria-label="language change">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="5" width="18" height="14" rx="2"/>
-          <path d="M3 10h18M9 5v14"/>
-        </svg>
+      <button class="icon-btn lang-btn" type="button" [attr.aria-label]="langAria" (click)="toggleLang()">
+        <span class="lang-text">{{ langLabel }}</span>
       </button>
-      <button class="icon-btn" aria-label="מצב כהה" (click)="toggleDark()">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-        </svg>
+      <button class="icon-btn" type="button" [attr.aria-label]="darkAria" (click)="toggleDark()">
+        @if (app.dark()) {
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+          </svg>
+        }
       </button>
     </div>
   </div>

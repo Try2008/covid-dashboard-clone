@@ -1,9 +1,9 @@
 :host { display: inline-flex; }
 
 .kpi-slim-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 10px;
-  box-shadow: 0 3px 15px -2px rgba(0, 2, 2, 0.2);
+  box-shadow: var(--slim-shadow);
   padding: 11px 14px;
   width: 311px;
   box-sizing: border-box;

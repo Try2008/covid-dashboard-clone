@@ -2,22 +2,60 @@
 
 .static {
   position: fixed;
-  right: 0;
+  inset-inline-end: 0;
   top: 0;
   width: 48px;
   height: 100vh;
-  background: #fff;
+  background: var(--card-bg);
   z-index: 9999;
   overflow: hidden;
-  transition: width 0.2s ease;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.08);
   padding-top: 64px;
   display: flex;
   flex-direction: column;
 
+  // Hide text and arrows when collapsed
+  .title-text,
+  .item-text,
+  .footer-items .text,
+  .chev {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .chev {
+    transform: rotate(90deg) scale(0.8);
+  }
+
+  // Smooth scrollbar
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+
   &:hover {
-    width: 220px;
+    width: 248px;
     overflow-y: auto;
+
+    .title-text,
+    .item-text,
+    .footer-items .text,
+    .chev {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .chev {
+      transform: rotate(0deg) scale(1);
+    }
   }
 }
 
@@ -35,9 +73,8 @@
 button.menu-title {
   display: flex;
   width: 100%;
-  height: 39px;
+  height: 48px;
   align-items: center;
-  justify-content: space-between;
   padding: 0 14px;
   font-size: 14px;
   font-weight: 700;
@@ -46,49 +83,132 @@ button.menu-title {
   border: none;
   cursor: pointer;
   white-space: nowrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
 
-  .chev { flex-shrink: 0; }
+  .title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--nav-bg);
+    flex-shrink: 0;
+  }
+
+  .title-text {
+    flex-grow: 1;
+    text-align: start;
+  }
+
+  .chev {
+    flex-shrink: 0;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
 }
 
 .items {
-  padding: 4px 0;
+  padding: 8px 0;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .item {
   display: flex;
   align-items: center;
-  padding: 10px 14px 10px 17px;
-  color: var(--primary-dark);
+  padding: 10px 14px;
+  color: var(--muted);
   font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
+  gap: 12px;
+  transition: background 0.15s, color 0.15s;
 
-  &:hover { background: #f0f3f8; }
-  &.active { font-weight: 700; background: #f6f8fb; }
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--muted);
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .item-text {
+    flex-grow: 1;
+    text-align: start;
+  }
+
+  &:hover {
+    background: var(--hover-bg);
+    color: var(--primary-dark);
+
+    .icon {
+      color: var(--nav-bg);
+    }
+  }
+
+  &.active {
+    font-weight: 700;
+    background: var(--hover-bg-strong);
+    color: var(--nav-bg);
+    border-inline-end: 3px solid var(--nav-bg);
+    padding-inline-end: 11px;
+
+    .icon {
+      color: var(--nav-bg);
+    }
+  }
 }
 
 .footer-items {
   margin-top: auto;
-  padding: 20px 8px 16px;
+  padding: 12px 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   border-top: 1px solid var(--border);
+  background: var(--footer-bg);
 }
 
 button.menu-item {
-  display: inline-block;
-  text-align: right;
-  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 14px;
   font-size: 13px;
-  color: var(--primary-dark);
+  color: var(--muted);
   background: transparent;
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  border-radius: 4px;
+  gap: 12px;
+  transition: background 0.15s, color 0.15s;
 
-  &:hover { background: #f0f3f8; }
+  .footer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--muted);
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .text {
+    flex-grow: 1;
+    text-align: start;
+  }
+
+  &:hover {
+    background: var(--hover-bg);
+    color: var(--primary-dark);
+
+    .footer-icon {
+      color: var(--nav-bg);
+    }
+  }
 }

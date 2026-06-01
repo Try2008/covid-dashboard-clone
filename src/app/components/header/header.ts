@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AppState } from '../../services/app-state';
 
 @Component({
   selector: 'app-header',
@@ -8,9 +9,43 @@ import { Component, signal } from '@angular/core';
   styleUrl: './header.scss',
 })
 export class Header {
-  isDark = signal(false);
+  readonly app = inject(AppState);
+
+  get title(): string {
+    return this.app.t('עולם הדאטה', 'Data World');
+  }
+
+  get menuAria(): string {
+    return this.app.t('תפריט', 'Menu');
+  }
+
+  get logoAria(): string {
+    return this.app.t('עולם הדאטה', 'Data World');
+  }
+
+  get logoAlt(): string {
+    return this.app.t('לוגו משרד הבריאות', 'Ministry of Health logo');
+  }
+
+  get langAria(): string {
+    return this.app.t('החלפת שפה', 'Change language');
+  }
+
+  get darkAria(): string {
+    return this.app.dark()
+      ? this.app.t('מצב בהיר', 'Light mode')
+      : this.app.t('מצב כהה', 'Dark mode');
+  }
+
+  get langLabel(): string {
+    return this.app.lang() === 'he' ? 'EN' : 'עב';
+  }
 
   toggleDark(): void {
-    this.isDark.update(v => !v);
+    this.app.toggleDark();
+  }
+
+  toggleLang(): void {
+    this.app.toggleLang();
   }
 }

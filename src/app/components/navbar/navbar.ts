@@ -3,9 +3,12 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  computed,
+  inject,
   signal,
   viewChild,
 } from '@angular/core';
+import { AppState } from '../../services/app-state';
 
 export interface AnchorItem {
   id: string;
@@ -20,22 +23,30 @@ export interface AnchorItem {
   styleUrl: './navbar.scss',
 })
 export class Navbar implements AfterViewInit, OnDestroy {
+  readonly app = inject(AppState);
+
   list = viewChild<ElementRef<HTMLUListElement>>('list');
   selectedIndex = signal(0);
   private observer?: IntersectionObserver;
   private suppressScrollSpyUntil = 0;
 
-  items: AnchorItem[] = [
-    { id: 'section-overview',            label: 'מבט על' },
-    { id: 'section-main-indicators',     label: 'מדדים מרכזיים' },
-    { id: 'section-children',            label: 'תחלואה ואשפוזי ילדים' },
-    { id: 'section-vaccination-effect',  label: 'השפעת התחסנות על התחלואה' },
-    { id: 'section-deceased',            label: 'נפטרים' },
-    { id: 'section-tests',               label: 'בדיקות' },
-    { id: 'section-investigations',      label: 'תחקורים נוספים' },
-    { id: 'section-recovered',           label: 'תחלואה חוזרת ומחלימים' },
-    { id: 'section-vaccination',         label: 'התחסנות האוכלוסיה' },
-  ];
+  readonly items = computed<AnchorItem[]>(() => {
+    const t = (he: string, en: string) => this.app.t(he, en);
+    return [
+      { id: 'section-overview',           label: t('מבט על',                    'Overview') },
+      { id: 'section-main-indicators',    label: t('מדדים מרכזיים',             'Key indicators') },
+      { id: 'section-children',           label: t('תחלואה ואשפוזי ילדים',      'Children morbidity & hospitalizations') },
+      { id: 'section-vaccination-effect', label: t('השפעת התחסנות על התחלואה', 'Vaccination effect on morbidity') },
+      { id: 'section-deceased',           label: t('נפטרים',                    'Deaths') },
+      { id: 'section-tests',              label: t('בדיקות',                    'Tests') },
+      { id: 'section-investigations',     label: t('תחקורים נוספים',            'Further investigations') },
+      { id: 'section-recovered',          label: t('תחלואה חוזרת ומחלימים',     'Reinfections & recoveries') },
+      { id: 'section-vaccination',        label: t('התחסנות האוכלוסיה',          'Population vaccination') },
+    ];
+  });
+
+  get arrowStartAria() { return this.app.t('גלול ימינה', 'Scroll right'); }
+  get arrowEndAria()   { return this.app.t('גלול שמאלה', 'Scroll left'); }
 
   ngAfterViewInit(): void {
     queueMicrotask(() => this.attachObserver());
@@ -47,9 +58,8 @@ export class Navbar implements AfterViewInit, OnDestroy {
 
   select(i: number): void {
     this.selectedIndex.set(i);
-    // Ignore the observer for a short window while smooth-scroll happens
     this.suppressScrollSpyUntil = Date.now() + 800;
-    const item = this.items[i];
+    const item = this.items()[i];
     const target = document.getElementById(item.id);
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     this.ensureItemVisible(i);
@@ -75,7 +85,7 @@ export class Navbar implements AfterViewInit, OnDestroy {
         if (!visible.length) return;
 
         const topId = visible[0].target.id;
-        const idx = this.items.findIndex(it => it.id === topId);
+        const idx = this.items().findIndex(it => it.id === topId);
         if (idx >= 0 && idx !== this.selectedIndex()) {
           this.selectedIndex.set(idx);
           this.ensureItemVisible(idx);
