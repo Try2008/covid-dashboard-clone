@@ -1,6 +1,6 @@
 import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { Header } from './components/header/header';
 import { Navbar } from './components/navbar/navbar';
 import { SideMenu } from './components/side-menu/side-menu';

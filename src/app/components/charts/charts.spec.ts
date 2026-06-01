@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHighcharts } from 'highcharts-angular';
 
 import { ChartCardComponent } from './charts';
 
@@ -11,6 +12,7 @@ describe('ChartCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ChartCardComponent],
+      providers: [provideHighcharts({ instance: () => import('highcharts') })],
     }).compileComponents();
   });
 

@@ -1,7 +1,7 @@
 import { Component, Input, HostListener, ElementRef, OnInit, OnChanges, SimpleChanges, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HighchartsChartComponent } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
+import type * as Highcharts from 'highcharts';
 import { AppState } from '../../services/app-state';
 
 export interface LegendItem {
@@ -28,8 +28,6 @@ export class ChartCardComponent implements OnInit, OnChanges {
   @Input() height = 320;
 
   readonly app = inject(AppState);
-
-  Highcharts: typeof Highcharts = Highcharts;
 
   isDropdownOpen = false;
   selectedTimeRange: RangeKey = 'month';

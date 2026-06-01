@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHighcharts } from 'highcharts-angular';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideHighcharts({ instance: () => import('highcharts') })],
     }).compileComponents();
   });
 
